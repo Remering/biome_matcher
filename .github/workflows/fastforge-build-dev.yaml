@@ -1,0 +1,17 @@
+name: FastForge Build Dev
+
+on:
+    workflow_dispatch
+
+jobs:
+  build-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+      - name: Install Fastforge
+        run: dart pub global activate fastforge
+      - name: Build and release
+        run: fastforge release --name dev
+        env:
+          GITHUB_API_KEY: ${{ secrets.GITHUB_API_KEY }}

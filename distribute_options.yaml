@@ -1,3 +1,5 @@
+variables:
+  GITHUB_TOKEN: your personal access token, See[https://docs.github.com/cn/enterprise-server@3.2/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token]
 
 output: dist/
 releases:
@@ -11,14 +13,29 @@ releases:
         package:
           platform: linux
           target: deb
+        publish:
+          target: github
+          args:
+            repo-owner: Remering
+            repo-name: biome_matcher
       - name: linux-zip
         package:
           platform: linux
           target: zip
+        publish:
+          target: github
+          args:
+            repo-owner: Remering
+            repo-name: biome_matcher
       - name: macos-dmg
         package:
           platform: macos
           target: dmg
+        publish:
+          target: github
+          args:
+            repo-owner: Remering
+            repo-name: biome_matcher  
       - name: macos-zip
         package:
           platform: macos
@@ -27,11 +44,26 @@ releases:
         package:
           platform: windows
           target: exe
+        publish:
+          target: github
+          args:
+            repo-owner: Remering
+            repo-name: biome_matcher
       - name: windows-msix
         package:
           platform: windows
           target: msix
+        publish:
+          target: github
+          args:
+            repo-owner: Remering
+            repo-name: biome_matcher
       - name: windows-zip
         package:
           platform: windows
           target: zip
+        publish:
+          target: github
+          args:
+            repo-owner: Remering
+            repo-name: biome_matcher
