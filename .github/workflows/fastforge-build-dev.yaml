@@ -4,14 +4,36 @@ on:
     workflow_dispatch
 
 jobs:
-  build-dev:
-    runs-on: ubuntu-latest
+  build-windows-dev:
+    name: Build for Windows
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v4
+      
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.8'
+          channel: stable
+      
+      - name: Set up MSVC Build Tools
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Install Inno Setup
+        uses: crazy-max/ghaction-chocolatey@v3
+        with:
+          args: install -y innosetup
+
+
       - name: Install Fastforge
         run: dart pub global activate fastforge
+
       - name: Build and release
-        run: fastforge release --name dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: fastforge release --skip-clean	--name dev 
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: dist/
