@@ -29,22 +29,22 @@ jobs:
       - name: Download Chinese Language Pack (Fix for Inno Setup)
         shell: powershell
         run: |
-          # 确保脚本遇到错误时停止执行
           $ErrorActionPreference = "Stop"
-          # 目标路径，这是 Inno Setup 默认寻找语言包的位置
+          
+          # 强制使用 TLS 1.2 协议，确保下载连接安全和稳定
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          
           $TargetDir = "C:\Program Files (x86)\Inno Setup 6\Languages"
-          # 语言包的可靠下载链接 (来自社区维护的 Inno Setup 简体中文翻译项目)
+          # 语言包的可靠下载链接
           $IslUrl = "https://raw.githubusercontent.com/kira-96/Inno-Setup-Chinese-Simplified-Translation/master/ChineseSimplified.isl"
           
-          Write-Host "Creating target directory: $TargetDir"
-          if (-not (Test-Path $TargetDir)) {
-              mkdir $TargetDir
-          }
-          
           Write-Host "Downloading ChineseSimplified.isl to $TargetDir"
-          # 使用 curl.exe 下载文件并保存到指定路径
-          curl.exe -L $IslUrl -OutFile "$TargetDir\ChineseSimplified.isl"
-
+          if (-not (Test-Path $TargetDir)) { mkdir $TargetDir }
+          
+          # 使用 Invoke-WebRequest 下载，并设置 TimeoutSec 避免无限期卡住
+          Invoke-WebRequest -Uri $IslUrl -OutFile "$TargetDir\ChineseSimplified.isl" -TimeoutSec 30
+          Write-Host "Download complete."
+          
       - name: Install Fastforge
         run: dart pub global activate fastforge
 
