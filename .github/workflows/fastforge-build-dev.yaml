@@ -26,6 +26,24 @@ jobs:
         with:
           args: install -y innosetup
 
+      - name: Download Chinese Language Pack (Fix for Inno Setup)
+        shell: powershell
+        run: |
+          # 确保脚本遇到错误时停止执行
+          $ErrorActionPreference = "Stop"
+          # 目标路径，这是 Inno Setup 默认寻找语言包的位置
+          $TargetDir = "C:\Program Files (x86)\Inno Setup 6\Languages"
+          # 语言包的可靠下载链接 (来自社区维护的 Inno Setup 简体中文翻译项目)
+          $IslUrl = "https://raw.githubusercontent.com/kira-96/Inno-Setup-Chinese-Simplified-Translation/master/ChineseSimplified.isl"
+          
+          Write-Host "Creating target directory: $TargetDir"
+          if (-not (Test-Path $TargetDir)) {
+              mkdir $TargetDir
+          }
+          
+          Write-Host "Downloading ChineseSimplified.isl to $TargetDir"
+          # 使用 curl.exe 下载文件并保存到指定路径
+          curl.exe -L $IslUrl -OutFile "$TargetDir\ChineseSimplified.isl"
 
       - name: Install Fastforge
         run: dart pub global activate fastforge
